@@ -7,105 +7,104 @@ sources accessible and create an entry table of the various image metadata.
 """
 
 import os
-from PIL import Image
 import tifffile
-from ncempy.io import dm
 import dm3_lib as dm3
-import zarr
 import glob
 import pandas as pd
 from img_dataset_tools.metadata_utils import flatten_dm3_dict, extract_zarr_metadata
 
+
 load_directory = os.path.join(os.getcwd(), "saved_datasets")
+
 
 dataset_folders = [] 
 
 for subfolder in os.listdir(load_directory):
     folder_path = os.path.join(load_directory, subfolder)
     if os.path.isdir(folder_path) and not subfolder.startswith("."):
-        dataset_folders.append(folder_path)
+         dataset_folders.append(folder_path)
 
 metadata_list = []
 
+all_tif_metadata = []
+all_dm3_metadata = []
+all_zarr_metadata = []
+
 for folder in dataset_folders:
-   
-    # # extracting .tif/.tiff metadata
-    # for tif_file in glob.glob(f"{folder}/*.tif") + glob.glob(f"{folder}/*.tiff"):
-    #     with tifffile.TiffFile(tif_file) as tif:
-    #         page = tif.pages[0]  
-    #         series = tif.series[0]
-            
-    #         tif_rows_dict = {
-    #             "dataset_id": os.path.basename(tif_file).split(".")[-2], 
-    #             "format": "TIFF",
-    #             "shape": series.shape,
-    #             "dtype": series.dtype,
-    #             "ndims": series.ndim,
-    #             "filepath": tif_file,
-    #             "file_size_MB": f"{os.path.getsize(tif_file)/(1e6):.2f}",
-    #             "samples_per_pixel": page.samplesperpixel
-    #         }
+    # extracting .tif/.tiff metadata
+    for tif_file in glob.glob(f"{folder}/*.tif") + glob.glob(f"{folder}/*.tiff"):
+        with tifffile.TiffFile(tif_file) as tif:
+            page = tif.pages[0]  
+            series = tif.series[0]
+            tags = page.tags
 
-    #         # print(f"Non-empty metadata keys in {os.path.basename(tif_file)}:")
-    #         # for key, value in tif_rows_dict.items():
-    #         #     if value not in (None, '', [], {}):
-    #         #         print(f" - {key}: {value}")
-    #         # break
+            # for resolution
+            x_tag = tags.get("XResolution")
+            y_tag = tags.get("YResolution")
+            unit_tag = tags.get("ResolutionUnit")
 
-    #         metadata_list.append(tif_rows_dict)
+            # Safe resolution extraction
+            x_res = (x_tag.value[0] / x_tag.value[1]) if x_tag and isinstance(x_tag.value, tuple) else (x_tag.value if x_tag else None)
+            y_res = (y_tag.value[0] / y_tag.value[1]) if y_tag and isinstance(y_tag.value, tuple) else (y_tag.value if y_tag else None)
 
-    # # extracting .dm3 metadata
-    # for dm3_file in glob.glob(f"{folder}/*.dm3"):
-    #     dm3_data = dm3.DM3(dm3_file)
-    #     dm3_flattened = flatten_dm3_dict(dm3_data.tags)
+            tif_rows_dict = {
+                "dataset_id": os.path.basename(tif_file).split(".")[-2], 
+                "format": "TIFF",
+                "shape": series.shape,
+                "dtype": series.dtype,
+                "ndims": series.ndim,
+                "resolution": (x_res, y_res),
+                "file_size_MB": f"{os.path.getsize(tif_file)/(1e6):.2f}",
+                "samples_per_pixel": page.samplesperpixel,
+                "file_path": tif_file
+            }
+
+            for key, value in tif_rows_dict.items():
+                if value not in (None, '', [], {}):
+                    all_tif_metadata.append({key: value})
+
+            metadata_list.append(tif_rows_dict)
+
+    # extracting .dm3 metadata
+    for dm3_file in glob.glob(f"{folder}/*.dm3"):
+        dm3_data = dm3.DM3(dm3_file)
+        dm3_array = dm3_data.imagedata
+        dm3_flattened = flatten_dm3_dict(dm3_data.tags)
            
-    #     dm3_rows_dict = {
-    #         "dataset_id": os.path.basename(dm3_file).split(".")[-2],
-    #         "format": "DM3",
-    #         "shape": dm3_flattened.get("ImageList.ImageData"),
-    #         "dtype": dm3_flattened.get("ImageData.DataType"),
-    #         "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
-    #         "pixel_size": (dm3_flattened.get("Pixel size")),
-    #         "size": dm3_flattened.get("Size"),
-    #         "channel": dm3_flattened.get("Channel"),
-    #         "zoom_ratio": dm3_flattened.get("Zoom ratio"),
-    #         "chunking": dm3_flattened.get("chunking"),
-    #         "file_path": dm3_file
-    #     }
-       
-    #     # print(f"Non-empty metadata keys in {os.path.basename(dm3_file)}:")
-    #     # for key, value in dm3_flattened.items():
-    #     #     if value not in (None, '', [], {}):
-    #     #         print(f" - {key}: {value}")
-    #     # break
-        
-    #     metadata_list.append(dm3_rows_dict)
+        dm3_rows_dict = {
+            "dataset_id": os.path.basename(dm3_file).split(".")[-2],
+            "format": "DM3",
+            "shape": dm3_data.imagedata.shape,
+            "dtype": str(dm3_array.dtype),
+            "resolution": dm3_flattened.get("ImageData.Calibrations.Dimension"),
+            "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
+            "pixel_size": (dm3_flattened.get("Pixel size")),
+            "size": dm3_flattened.get("Size"),
+            "channel": dm3_array.shape[-1] if dm3_array.ndim >= 3 else 1,
+            "zoom_ratio": dm3_flattened.get("Zoom ratio"),
+            "ndims": dm3_data.imagedata.ndim,
+            "chunks": dm3_flattened.get("chunking"),
+            "file_path": dm3_file
+        }  
+
+        for key, value in dm3_flattened.items():
+            if value not in (None, '', [], {}):
+                all_dm3_metadata.append({key: value})
+
+        metadata_list.append(dm3_rows_dict)
 
 
-    # extracting .zarr metadata 
-    for subfolder in glob.glob(f"{folder}/*.zarr"):
-        try:
-            z = zarr.open(subfolder, mode='r')  # handles both group and array cases
-            zarr_metadata = extract_zarr_metadata(z, base_path="") # list of dictionaries
+# extract zarr metadata
+zarr_path = os.path.join(os.getcwd(), "saved_datasets", "jrc_mus-nacc-2.zarr")
+metadata_list.extend(extract_zarr_metadata(zarr_path))
 
-            # if zarr_metadata:
-            #     first_array = zarr_metadata[0]
-            #     print(f"Non-empty metadata keys for first Zarr array in {os.path.basename(subfolder)}:")
-            #     for key, value in first_array.items():
-            #         if value not in (None, '', [], {}, 'None'):
-            #             print(f" - {key}: {value}")
-            # break  
-
-            
-            metadata_list.extend([row for row in zarr_metadata])
-            
-        except Exception as e:
-            print(f"Failed to read {subfolder}: {e}")
-
-      
-# convert to table
+# convert to dataframe
 metadata_table = pd.DataFrame(metadata_list)
-print(metadata_table)
 
-# # save as csv
-# metadata_csv = metadata_table.to_csv("metadata_table.csv", index=False)
+# move 'file_path' to the last column 
+if "file_path" in metadata_table.columns:
+    cols = [col for col in metadata_table.columns if col != "file_path"] + ["file_path"]
+    metadata_table = metadata_table[cols] 
+
+# save as csv
+metadata_table.to_csv("metadata_table.csv", index=False)
