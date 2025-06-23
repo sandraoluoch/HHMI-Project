@@ -32,55 +32,52 @@ def flatten_dm3_dict(nested_dict, parent_key=""):
 
 # FUNCTION 7: FLATTENING NESTED DICTIONARY FOR .ZARR METADATA EXTRACTION
 
-def extract_zarr_metadata(z_obj, base_path=""):
+def extract_zarr_metadata(zarr_root_folder):
     """
-    This function extracts metadata from nested zarr folders.
+    This function finds all .zarray-containing arrays,
+    and extracts metadata (including resolution + custom attrs) into a list of dicts.
     """
     metadata = []
 
-    if isinstance(z_obj, zarr.core.Array):
+    for root, dirs, files in os.walk(zarr_root_folder):
+        if ".zarray" in files:
+            try:
+                z_obj = zarr.open(root, mode='r')
 
-        zarr_rows_dict = {
-            "dataset_id": base_path,
-            "format": "ZARR",
-            "shape": z_obj.shape,
-            "ndim": z_obj.ndim,
-            "dtype": str(z_obj.dtype),
-            "chunks": z_obj.chunks,
-            "compressor": str(z_obj.compressor),
-            "file_path": os.path.join(getattr(z_obj.store, "path", "unknown_store"), z_obj.path)
-        }
+                zarr_rows_dict = {
+                    "dataset_id": os.path.relpath(root, start=zarr_root_folder),
+                    "format": "ZARR",
+                    "shape": z_obj.shape,
+                    "ndim": z_obj.ndim,
+                    "dtype": str(z_obj.dtype),
+                    "chunks": z_obj.chunks,
+                    "compressor": str(z_obj.compressor),
+                    "size": z_obj.size,
+                    "fill_value": z_obj.fill_value,
+                    "file_path": os.path.join(getattr(z_obj.store, "path", "unknown_store"), z_obj.path)
+                }
 
-         # add known resolution attrs to list
-        resolution_keys = ["pixelResolution", "scale", "spacing"]
-        unit_keys = ["units", "unit", "resolution_unit"]
+                resolution_keys = ["pixelResolution", "scale", "spacing"]
+                unit_keys = ["units", "unit", "resolution_unit"]
 
-        for key in resolution_keys:
-            if key in z_obj.attrs:
-                zarr_rows_dict["resolution"] = z_obj.attrs[key]
-                break
-        
-        # add known resolution attrs to list if any
-        for key in unit_keys:
-            if key in z_obj.attrs:
-                zarr_rows_dict["resolution_unit"] = z_obj.attrs[key]
-                break
+                for key in resolution_keys:
+                    if key in z_obj.attrs:
+                        zarr_rows_dict["resolution"] = z_obj.attrs[key]
+                        break
 
-        # Add known resolution units to list if any
-        for key, value in z_obj.attrs.items():
-            if key not in resolution_keys + unit_keys:
-                zarr_rows_dict[f"Attr_{key}"] = value
+                for key in unit_keys:
+                    if key in z_obj.attrs:
+                        zarr_rows_dict["resolution_unit"] = z_obj.attrs[key]
+                        break
 
-        metadata.append(zarr_rows_dict)
+                for key, value in z_obj.attrs.items():
+                    if key not in resolution_keys + unit_keys:
+                        zarr_rows_dict[f"Attr_{key}"] = value
 
-    # iterating through zarr group recursively to extract metadata from nested arrays
-    elif isinstance(z_obj, zarr.hierarchy.Group):
-        for name, item in z_obj.items():
-            child_path = f"{base_path}/{name}" if base_path else name
-            metadata.extend(extract_zarr_metadata(item, child_path))
+                metadata.append(zarr_rows_dict)
 
-    else:
-        logger.warning(f"Unsupported zarr object at {base_path}")
+            except Exception as e:
+                print(f"Failed to read {root}: {e}")
 
     return metadata
 
