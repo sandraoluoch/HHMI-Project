@@ -38,7 +38,7 @@ For the fourth function that webscrapes and downloads a zarr folder hosted on Am
    
 Library used: CloudVolume
 
-For the fifth function that webscrapes and downloads a random crop region of 1000x1000x1000, I used the CloudVolume library. The website, Neuroglancer, stores its images as volumes on Google Storage and CloudVolume is ideal for handling precomputed volumes. I used an AI chatbot here to help me figure out how to crop the image on the actual full resolution image. I also used it to help bypass the authorization errors I kept getting when trying to download the imageI saved the cropped image as a .tif file to my local directory.
+For the fifth function that webscrapes and downloads a random crop region of 1000x1000x1000, I used the CloudVolume library. The website, Neuroglancer, stores its images as volumes on Google Storage and CloudVolume is ideal for handling precomputed volumes. I used an AI assistant here to help me figure out how to crop the image on the actual full resolution image. I also used it to help bypass the authorization errors I kept getting when trying to download the imageI saved the cropped image as a .tif file to my local directory.
 
 <b>STEP 2: PARALLELIZED DOWNLOADING OF DATASETS</b>
 
@@ -46,7 +46,7 @@ In order to download all five datasets in a parallelized fashion, I used Python'
 
 <b>STEP 3: CREATING METADATA TABLE</b>
 
-Once I had all the image datasets downloaded, I created a script that extracted and consolidated the metadata. I decided to extract metadata by file type because different file types store metadata differently. Then I combined them in a Pandas Dataframe and exported it as a .csv file. For each file type (.tif, .dm3, zarr), I first listed the available metadata and then chose the ones that would be helpful for an AI/ML pipeline. This was straightforward for the .tif files, but for the .dm3 and zarr datasets, I created two functions (flatten_dm3_dict and extract_zarr_metadata) to help access the metadata. I used an AI chatbot here to help with constructing these functions. 
+Once I had all the image datasets downloaded, I created a script that extracted and consolidated the metadata. I decided to extract metadata by file type because different file types store metadata differently. Then I combined them in a Pandas Dataframe and exported it as a .csv file. For each file type (.tif, .dm3, zarr), I first listed the available metadata and then chose the ones that would be helpful for an AI/ML pipeline. This was straightforward for the .tif files, but for the .dm3 and zarr datasets, I created two functions (flatten_dm3_dict and extract_zarr_metadata) to help access the metadata. I used an AI assistant here to help with constructing these functions. 
 
 <h2><b>Project Structure</b></h2>
 
