@@ -29,55 +29,57 @@ metadata_list = []
 
 for folder in dataset_folders:
    
-    # extracting .tif/.tiff metadata
-    for tif_file in glob.glob(f"{folder}/*.tif") + glob.glob(f"{folder}/*.tiff"):
-        with tifffile.TiffFile(tif_file) as tif:
-            page = tif.pages[0]  
-            series = tif.series[0]
+    # # extracting .tif/.tiff metadata
+    # for tif_file in glob.glob(f"{folder}/*.tif") + glob.glob(f"{folder}/*.tiff"):
+    #     with tifffile.TiffFile(tif_file) as tif:
+    #         page = tif.pages[0]  
+    #         series = tif.series[0]
             
-            tif_rows_dict = {
-                "name": os.path.basename(tif_file).split(".")[-2], 
-                "format": "TIFF",
-                "shape": series.shape,
-                "dtype": series.dtype,
-                "ndims": series.ndim,
-                "file_size_MB": f"{os.path.getsize(tif_file)/(1e6):.2f}",
-                "samples_per_pixel": page.samplesperpixel
-            }
+    #         tif_rows_dict = {
+    #             "dataset_id": os.path.basename(tif_file).split(".")[-2], 
+    #             "format": "TIFF",
+    #             "shape": series.shape,
+    #             "dtype": series.dtype,
+    #             "ndims": series.ndim,
+    #             "filepath": tif_file,
+    #             "file_size_MB": f"{os.path.getsize(tif_file)/(1e6):.2f}",
+    #             "samples_per_pixel": page.samplesperpixel
+    #         }
 
-            # print(f"Non-empty metadata keys in {os.path.basename(tif_file)}:")
-            # for key, value in tif_rows_dict.items():
-            #     if value not in (None, '', [], {}):
-            #         print(f" - {key}: {value}")
-            # break
+    #         # print(f"Non-empty metadata keys in {os.path.basename(tif_file)}:")
+    #         # for key, value in tif_rows_dict.items():
+    #         #     if value not in (None, '', [], {}):
+    #         #         print(f" - {key}: {value}")
+    #         # break
 
-            metadata_list.append(tif_rows_dict)
+    #         metadata_list.append(tif_rows_dict)
 
-    # extracting .dm3 metadata
-    for dm3_file in glob.glob(f"{folder}/*.dm3"):
-        dm3_data = dm3.DM3(dm3_file)
-        dm3_flattened = flatten_dm3_dict(dm3_data.tags)
+    # # extracting .dm3 metadata
+    # for dm3_file in glob.glob(f"{folder}/*.dm3"):
+    #     dm3_data = dm3.DM3(dm3_file)
+    #     dm3_flattened = flatten_dm3_dict(dm3_data.tags)
            
-        dm3_rows_dict = {
-            "name": os.path.basename(dm3_file).split(".")[-2],
-            "format": "DM3",
-            "shape": dm3_flattened.get("ImageList.ImageData"),
-            "dtype": dm3_flattened.get("ImageData.DataType"),
-            "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
-            "pixel_size": (dm3_flattened.get("Pixel size")),
-            "size": dm3_flattened.get("Size"),
-            "channel": dm3_flattened.get("Channel"),
-            "zoom_ratio": dm3_flattened.get("Zoom ratio"),
-            "chunking": dm3_flattened.get("chunking")
-        }
+    #     dm3_rows_dict = {
+    #         "dataset_id": os.path.basename(dm3_file).split(".")[-2],
+    #         "format": "DM3",
+    #         "shape": dm3_flattened.get("ImageList.ImageData"),
+    #         "dtype": dm3_flattened.get("ImageData.DataType"),
+    #         "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
+    #         "pixel_size": (dm3_flattened.get("Pixel size")),
+    #         "size": dm3_flattened.get("Size"),
+    #         "channel": dm3_flattened.get("Channel"),
+    #         "zoom_ratio": dm3_flattened.get("Zoom ratio"),
+    #         "chunking": dm3_flattened.get("chunking"),
+    #         "file_path": dm3_file
+    #     }
        
-        # print(f"Non-empty metadata keys in {os.path.basename(dm3_file)}:")
-        # for key, value in dm3_flattened.items():
-        #     if value not in (None, '', [], {}):
-        #         print(f" - {key}: {value}")
-        # break
+    #     # print(f"Non-empty metadata keys in {os.path.basename(dm3_file)}:")
+    #     # for key, value in dm3_flattened.items():
+    #     #     if value not in (None, '', [], {}):
+    #     #         print(f" - {key}: {value}")
+    #     # break
         
-        metadata_list.append(dm3_rows_dict)
+    #     metadata_list.append(dm3_rows_dict)
 
 
     # extracting .zarr metadata 
@@ -103,6 +105,7 @@ for folder in dataset_folders:
       
 # convert to table
 metadata_table = pd.DataFrame(metadata_list)
+print(metadata_table)
 
-# save as csv
-metadata_csv = metadata_table.to_csv("metadata_table.csv", index=False)
+# # save as csv
+# metadata_csv = metadata_table.to_csv("metadata_table.csv", index=False)

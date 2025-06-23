@@ -9,6 +9,7 @@ sources accessible and create an entry table of the various image metadata.
 
 import logging
 import zarr
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -40,13 +41,14 @@ def extract_zarr_metadata(z_obj, base_path=""):
     if isinstance(z_obj, zarr.core.Array):
 
         zarr_rows_dict = {
-            "name": base_path,
+            "dataset_id": base_path,
             "format": "ZARR",
             "shape": z_obj.shape,
             "ndim": z_obj.ndim,
             "dtype": str(z_obj.dtype),
             "chunks": z_obj.chunks,
             "compressor": str(z_obj.compressor),
+            "file_path": os.path.join(getattr(z_obj.store, "path", "unknown_store"), z_obj.path)
         }
 
          # add known resolution attrs to list

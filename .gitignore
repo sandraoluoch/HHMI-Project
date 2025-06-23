@@ -1,0 +1,12 @@
+# Ignore saved datasets
+saved_datasets/
+*.zarr
+*.tif
+*.dm3
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore VSCode settings
+.vscode/
