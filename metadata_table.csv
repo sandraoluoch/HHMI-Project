@@ -1,0 +1,26 @@
+name,format,shape,dtype,ndims,file_size_MB,samples_per_pixel,pixel_size,size,channel,zoom_ratio,acquisition_date_time
+neuroglancer-janelia-flyem-hemibrain_crop,TIFF,"(1000, 1000, 1000, 1)",uint8,4.0,1000.17,1.0,,,,,
+volumedata,TIFF,"(1065, 1536, 2048)",uint8,3.0,3353.67,1.0,,,,,
+testing_groundtruth,TIFF,"(165, 768, 1024)",uint8,3.0,129.92,1.0,,,,,
+results_test,TIFF,"(165, 768, 1024)",uint8,3.0,129.92,1.0,,,,,
+training_groundtruth,TIFF,"(165, 768, 1024)",uint8,3.0,129.92,1.0,,,,,
+testing,TIFF,"(165, 768, 1024)",uint8,3.0,129.92,1.0,,,,,
+training,TIFF,"(165, 768, 1024)",uint8,3.0,129.92,1.0,,,,,
+F57-8_test1_3VBSED_slice_0014,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:39:25 2018 
+F57-8_test1_3VBSED_slice_0000,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:26:45 2018 
+F57-8_test1_3VBSED_slice_0001,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:27:41 2018 
+F57-8_test1_3VBSED_slice_0015,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:40:19 2018 
+F57-8_test1_3VBSED_slice_0003,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:29:28 2018 
+F57-8_test1_3VBSED_slice_0002,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:28:34 2018 
+F57-8_test1_3VBSED_slice_0006,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:32:10 2018 
+F57-8_test1_3VBSED_slice_0012,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:37:36 2018 
+F57-8_test1_3VBSED_slice_0013,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:38:30 2018 
+F57-8_test1_3VBSED_slice_0007,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:33:04 2018 
+F57-8_test1_3VBSED_slice_0011,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:36:41 2018 
+F57-8_test1_3VBSED_slice_0005,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:31:16 2018 
+F57-8_test1_3VBSED_slice_0004,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:30:22 2018 
+F57-8_test1_3VBSED_slice_0010,DM3,,,,30.836882,,100.0,146,1,2.0,Mon Jun 11 22:35:47 2018 
+F57-8_test1_3VBSED_slice_0009,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:34:52 2018 
+F57-8_test1_3VBSED_slice_0008,DM3,,,,30.39605,,100.0,146,1,2.0,Mon Jun 11 22:33:58 2018 
+tif_t000_c00,TIFF,"(775, 184, 1121)",uint8,3.0,159.98,1.0,,,,,
+tif_t000_c00,TIFF,"(184, 775, 1121)",uint8,3.0,159.89,1.0,,,,,
