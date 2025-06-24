@@ -127,7 +127,7 @@ def url_image_scrape_static(url, save_directory):
         logger.error(f"Failed static scrape from {url}: {e}", exc_info=True)
     
     
-# FUNCTION 3: FOR STATIC IMAGES 
+# FUNCTION 3: FOR JAVASCRIPT DYNAMIC LINKS
 
 def url_image_scrape_selenium(url, save_directory, num_workers=4): 
     """
@@ -229,8 +229,6 @@ def url_image_scrape_zarr(url, save_directory):
 
         logger.info(f"Found {len(zarr_keys)} arrays under {url}:")
 
-        # for key in zarr_keys:
-        #     print(f" - {key}")
 
         # Download each array
         for key in tqdm(zarr_keys, desc=f"Downloading {dataset_id}", unit="array"):
