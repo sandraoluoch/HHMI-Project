@@ -64,24 +64,33 @@ saved_datasets/               # Downloaded datasets (created at runtime)
 metadata_table.csv            # Output CSV of all metadata (created at runtime) </pre>
 
 <h2><b>Installation</b></h2>
+Clone the repository:
 
 <pre>git clone https://github.com/yourusername/img_dataset_tools.git
-cd img_dataset_tools </pre>
 
-<h2><b>Required Packages</b></h2>
+   ```bash
+   git clone https://github.com/yourusername/HHMI-Project.git
+   cd HHMI-Project
 
-- requests
-- beautifulsoup4
-- selenium
-- zarr
-- fsspec
-- tifffile
-- ncempy
-- dm3_lib
-- cloud-volume
-- idr-py
-- pandas
-- numpy
-- tqdm
+</pre>
+
+Create virtual environment:
+
+<pre>python -m venv venv
+source venv/bin/activate
+</pre>
+
+Install dependencies:
+
+<pre>pip install -r requirements.txt
+pip install -e .
+</pre>
+
+Run Script:
+
+<pre>python scripts/multiprocessing_image_datasets.py
+
+</pre>
+
 
 
