@@ -9,10 +9,10 @@ data type, and other useful information for downstream AI/ML pipelines.
 
 import os
 import tifffile
-import dm3_lib as dm3
 import glob
 import pandas as pd
 from img_dataset_tools.metadata_utils import flatten_dm3_dict, extract_zarr_metadata
+from img_dataset_tools import dm3_lib as dm3
 
 load_directory = os.path.join(os.getcwd(), "saved_datasets")
 
