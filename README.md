@@ -66,10 +66,7 @@ metadata_table.csv            # Output CSV of all metadata (created at runtime) 
 <h2><b>Installation</b></h2>
 Clone the repository:
 
-<pre>git clone https://github.com/yourusername/img_dataset_tools.git
-
-   ```bash
-   git clone https://github.com/yourusername/HHMI-Project.git
+<pre>git clone https://github.com/yourusername/HHMI-Project.git
    cd HHMI-Project
 
 </pre>
