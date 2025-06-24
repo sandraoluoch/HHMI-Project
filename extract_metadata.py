@@ -1,9 +1,10 @@
 """
-This script extracts metadata information from different image datasets. The image datasets were
-previously downloaded to a local directory using the download_image_datasets.py script.
+This script extracts metadata information from different 3D microscopy image datasets.
+The datasets are assumed to have been previously downloaded to a local directory using 
+the download_image_datasets.py script.
 
-The overall goal of this project is to download 3D microscopy image datasets from different
-sources accessible and create an entry table of the various image metadata. 
+The goal is to generate a unified metadata table containing image format, shape, resolution,
+data type, and other useful information for downstream AI/ML pipelines.
 """
 
 import os
@@ -12,7 +13,6 @@ import dm3_lib as dm3
 import glob
 import pandas as pd
 from img_dataset_tools.metadata_utils import flatten_dm3_dict, extract_zarr_metadata
-
 
 load_directory = os.path.join(os.getcwd(), "saved_datasets")
 
@@ -26,9 +26,6 @@ for subfolder in os.listdir(load_directory):
 
 metadata_list = []
 
-all_tif_metadata = []
-all_dm3_metadata = []
-all_zarr_metadata = []
 
 for folder in dataset_folders:
     # extracting .tif/.tiff metadata
@@ -59,10 +56,6 @@ for folder in dataset_folders:
                 "file_path": tif_file
             }
 
-            for key, value in tif_rows_dict.items():
-                if value not in (None, '', [], {}):
-                    all_tif_metadata.append({key: value})
-
             metadata_list.append(tif_rows_dict)
 
     # extracting .dm3 metadata
@@ -87,10 +80,6 @@ for folder in dataset_folders:
             "file_path": dm3_file
         }  
 
-        for key, value in dm3_flattened.items():
-            if value not in (None, '', [], {}):
-                all_dm3_metadata.append({key: value})
-
         metadata_list.append(dm3_rows_dict)
 
 
@@ -100,6 +89,7 @@ metadata_list.extend(extract_zarr_metadata(zarr_path))
 
 # convert to dataframe
 metadata_table = pd.DataFrame(metadata_list)
+print(metadata_table)
 
 # move 'file_path' to the last column 
 if "file_path" in metadata_table.columns:
