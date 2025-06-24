@@ -50,18 +50,25 @@ Once I had all the image datasets downloaded, I created a script that extracted 
 
 <h2><b>Project Structure</b></h2>
 
-<pre>img_dataset_tools/
+<pre>HHMI-Project/
+├── img_dataset_tools/                # Core module for dataset tools
+│   ├── __init__.py                   # Package initializer
+│   ├── webscrapers.py                # Functions to download datasets from various sources
+│   ├── metadata_utils.py             # Utilities for extracting and flattening metadata
+│   └── dm3_lib/                      # Local copy of dm3_lib for DM3 file parsing
+│       ├── __init__.py
+│       └── _dm3_lib.py
 │
-├── __init__.py                 # Unified API
-├── webscrapers.py             # Download functions for various data sources
-├── metadata_utils.py          # Metadata extraction + flattening
+├── scripts/                          # Scripts for processing datasets
+│   ├── multiprocessing_image_datasets.py  # Parallelized dataset downloader
+│   └── extract_metadata.py                # Metadata extraction script
 │
-scripts/
-├── multiprocessing_image_datasets.py  # Downloads datasets in parallel
-├── extract_metadata.py                # Extracts metadata from saved datasets
+├── saved_datasets/                   # Directory for downloaded datasets (created at runtime)
 │
-saved_datasets/               # Downloaded datasets (created at runtime)
-metadata_table.csv            # Output CSV of all metadata (created at runtime) </pre>
+├── metadata_table.csv                # Output CSV containing aggregated metadata (generated at runtime)
+│
+├── README.md                         # Project documentation
+└── .gitignore                        # Specifies files and directories to be ignored by Git </pre>
 
 <h2><b>Installation and Running the Code</b></h2>
 This code works best using conda and Python=3.10+
