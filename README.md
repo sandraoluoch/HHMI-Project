@@ -63,23 +63,50 @@ scripts/
 saved_datasets/               # Downloaded datasets (created at runtime)
 metadata_table.csv            # Output CSV of all metadata (created at runtime) </pre>
 
-<h2><b>Dependencies</b></h2>
-This project uses Python 3.10+ and the following external libraries:
+<h2><b>Installation and Running the Code</b></h2>
+This code works best using conda and Python=3.10+
 
-- pandas	
-- numpy	
-- tqdm	
-- tifffile	
-- zarr	
-- fsspec	
-- requests	
-- beautifulsoup4	
-- selenium	
-- ncempy	
-- cloud-volume	
-- idr-py	
+In your terminal, clone the repo and navigate to the HHMI-Project folder:
+<pre>
+   git clone https://github.com/sandraoluoch/HHMI-Project.git
+   cd HHMI-Project
+</pre>
 
+Create a new conda environment and activate it:
+<pre>
+   conda create -n hhmi-env python=3.10 -y
+   conda activate hhmi-env
+</pre>
 
+Install the following packages:
+<pre>
+   pip install pandas numpy tqdm tifffile zarr fsspec requests beautifulsoup4 selenium ncempy cloud-volume idr-py
+</pre>
+
+Install the zeroc-ice package separately using conda-forge:
+<pre>
+   conda install conda-forge::zeroc-ice
+</pre>
+
+Install the idr-py package separately using conda-forge:
+<pre>
+   conda install bioconda::idr-py   
+</pre>
+
+Install the img_dataset_tools package:
+<pre>
+   pip install -e .
+</pre>
+
+For downloading the image datasets:
+<pre>
+   python scripts/multiprocessing_image_datasets.py 
+</pre>
+
+For extracting the metadata and creating a table:
+<pre>
+   python scripts/extract_metadata.py 
+</pre>
 
 
 
