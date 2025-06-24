@@ -1,6 +1,5 @@
 beautifulsoup4==4.13.4
 cloud_volume==12.3.1
-dm3_lib==1.5
 fsspec==2025.5.1
 idr_py==0.4.2
 numpy==2.3.1
