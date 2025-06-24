@@ -80,7 +80,7 @@ Create a new conda environment and activate it:
 
 Install the following packages:
 <pre>
-   pip install pandas numpy tqdm tifffile zarr fsspec requests beautifulsoup4 selenium ncempy cloud-volume idr-py
+   pip install pandas numpy tqdm tifffile zarr fsspec requests beautifulsoup4 selenium ncempy cloud-volume idr-py pip install s3fs
 </pre>
 
 Install the zeroc-ice package separately using conda-forge:
