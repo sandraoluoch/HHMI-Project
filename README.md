@@ -63,31 +63,24 @@ scripts/
 saved_datasets/               # Downloaded datasets (created at runtime)
 metadata_table.csv            # Output CSV of all metadata (created at runtime) </pre>
 
-<h2><b>Installation</b></h2>
-Clone the repository:
+<h2><b>Dependencies</b></h2>
+This project uses Python 3.10+ and the following external libraries:
 
-<pre>git clone https://github.com/yourusername/HHMI-Project.git
-   cd HHMI-Project
+- pandas	
+- numpy	
+- tqdm	
+- tifffile	
+- zarr	
+- fsspec	
+- requests	
+- beautifulsoup4	
+- selenium	
+- ncempy	
+- cloud-volume	
+- idr-py	
 
-</pre>
 
-Create virtual environment:
 
-<pre>python -m venv venv
-source venv/bin/activate
-</pre>
-
-Install dependencies:
-
-<pre>pip install -r requirements.txt
-pip install -e .
-</pre>
-
-Run Script:
-
-<pre>python scripts/multiprocessing_image_datasets.py
-
-</pre>
 
 
 
