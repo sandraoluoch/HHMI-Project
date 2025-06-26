@@ -69,7 +69,7 @@ for folder in dataset_folders:
             "format": "DM3",
             "shape": dm3_data.imagedata.shape,
             "dtype": str(dm3_array.dtype),
-            "resolution": (int(float(dm3_flattened.get("Size"))), int(float(dm3_flattened.get("Size")))),
+            "resolution": (int(float(dm3_flattened.get("Pixel size"))), int(float(dm3_flattened.get("Pixel size")))),
             "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
             "size": dm3_flattened.get("Size"),
             "channel": dm3_array.shape[-1] if dm3_array.ndim >= 3 else 1,
