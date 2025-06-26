@@ -44,13 +44,25 @@ for folder in dataset_folders:
             x_res = (x_tag.value[0] / x_tag.value[1]) if x_tag and isinstance(x_tag.value, tuple) else (x_tag.value if x_tag else None)
             y_res = (y_tag.value[0] / y_tag.value[1]) if y_tag and isinstance(y_tag.value, tuple) else (y_tag.value if y_tag else None)
 
+            if "neuroglancer-janelia-flyem-hemibrain/neuroglancer-janelia-flyem-hemibrain_crop.tif" in tif_file:
+                x_res = y_res = z_res = 8
+            
+            elif "omero_10740" in tif_file:
+                x_res = y_res = z_res = 20
+            
+            elif "mitochondria-data-em" in tif_file:
+                x_res = y_res = z_res = 5
+            else:
+                z_res = None
+
+
             tif_rows_dict = {
                 "dataset_id": os.path.basename(tif_file).split(".")[-2], 
                 "format": "TIFF",
                 "shape": series.shape,
                 "dtype": series.dtype,
                 "ndims": series.ndim,
-                "resolution": (x_res, y_res, None),
+                "resolution_nm": (x_res, y_res, z_res),
                 "file_size_MB": f"{os.path.getsize(tif_file)/(1e6):.2f}",
                 "samples_per_pixel": page.samplesperpixel,
                 "file_path": tif_file
@@ -69,7 +81,7 @@ for folder in dataset_folders:
             "format": "DM3",
             "shape": dm3_data.imagedata.shape,
             "dtype": str(dm3_array.dtype),
-            "resolution": (int(float(dm3_flattened.get("Pixel size"))), int(float(dm3_flattened.get("Pixel size")))),
+            "resolution_nm": (int(float(dm3_flattened.get("Pixel size"))), int(float(dm3_flattened.get("Pixel size")))),
             "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
             "size": dm3_flattened.get("Size"),
             "channel": dm3_array.shape[-1] if dm3_array.ndim >= 3 else 1,
