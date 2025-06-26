@@ -75,13 +75,24 @@ for folder in dataset_folders:
         dm3_data = dm3.DM3(dm3_file)
         dm3_array = dm3_data.imagedata
         dm3_flattened = flatten_dm3_dict(dm3_data.tags)
+
+        # resolution
+        pixel_size = dm3_flattened.get("Pixel size")
+        try:
+            resolution_nm = (int(float(pixel_size)), int(float(pixel_size)))
+        except (TypeError, ValueError):
+            resolution_nm = (None, None)
+
+        # manual override if we know from external source
+        if "empiar_11759" in dm3_file:
+            resolution_nm = (8, 8)
            
         dm3_rows_dict = {
             "dataset_id": os.path.basename(os.path.dirname(tif_file)),
             "format": "DM3",
             "shape": dm3_data.imagedata.shape,
             "dtype": str(dm3_array.dtype),
-            "resolution_nm": (int(float(dm3_flattened.get("Pixel size"))), int(float(dm3_flattened.get("Pixel size")))),
+            "resolution_nm": resolution_nm,
             "file_size_MB": f"{os.path.getsize(dm3_file)/(1e6)}",
             "size": dm3_flattened.get("Size"),
             "channel": dm3_array.shape[-1] if dm3_array.ndim >= 3 else 1,
