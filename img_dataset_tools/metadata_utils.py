@@ -57,22 +57,13 @@ def extract_zarr_metadata(zarr_root_folder):
                     "file_path": os.path.join(getattr(z_obj.store, "path", "unknown_store"), z_obj.path)
                 }
 
-                resolution_keys = ["pixelResolution", "scale", "spacing"]
-                unit_keys = ["units", "unit", "resolution_unit"]
-
-                for key in resolution_keys:
-                    if key in z_obj.attrs:
-                        zarr_rows_dict["resolution"] = z_obj.attrs[key]
-                        break
-
-                for key in unit_keys:
-                    if key in z_obj.attrs:
-                        zarr_rows_dict["resolution_unit"] = z_obj.attrs[key]
-                        break
-
+                # obtaining data from .attrs files if present
                 for key, value in z_obj.attrs.items():
-                    if key not in resolution_keys + unit_keys:
-                        zarr_rows_dict[f"Attr_{key}"] = value
+                    zarr_rows_dict[f"Attr_{key}"] = value
+              
+                # if any metadata is found from website/outside sources
+                if "recon-2" in zarr_rows_dict["file_path"]:
+                    zarr_rows_dict["resolution_nm"] = (4, 4, 2.96)
 
                 metadata.append(zarr_rows_dict)
 
