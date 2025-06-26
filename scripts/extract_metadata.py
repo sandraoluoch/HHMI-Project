@@ -57,7 +57,7 @@ for folder in dataset_folders:
 
 
             tif_rows_dict = {
-                "dataset_id": os.path.basename(tif_file).split(".")[-2], 
+                "dataset_id": os.path.basename(os.path.dirname(tif_file)), 
                 "format": "TIFF",
                 "shape": series.shape,
                 "dtype": series.dtype,
@@ -77,7 +77,7 @@ for folder in dataset_folders:
         dm3_flattened = flatten_dm3_dict(dm3_data.tags)
            
         dm3_rows_dict = {
-            "dataset_id": os.path.basename(dm3_file).split(".")[-2],
+            "dataset_id": os.path.basename(os.path.dirname(tif_file)),
             "format": "DM3",
             "shape": dm3_data.imagedata.shape,
             "dtype": str(dm3_array.dtype),
